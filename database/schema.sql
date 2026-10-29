@@ -1,0 +1,5 @@
+CREATE TABLE IF NOT EXISTS waitlist_entries (
+  id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  email TEXT NOT NULL UNIQUE CHECK (email = lower(trim(email))),
+  created_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
