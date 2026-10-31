@@ -10,10 +10,21 @@ import { Label } from "@/components/ui/label";
 export function WaitlistForm() {
   const [email, setEmail] = useState("");
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    setEmail("");
-    toast.success("You have entered the waitlist!");
+    try {
+      const response = await fetch("/api/waitlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email }),
+      });
+      const result = await response.json();
+      if (!response.ok) throw new Error(result.error || "We couldn’t save your email. Please try again.");
+      setEmail("");
+      toast.success(result.message);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "We couldn’t save your email. Please try again.");
+    }
   }
 
   return (
